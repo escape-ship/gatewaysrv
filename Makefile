@@ -2,10 +2,17 @@ all: build
 
 build:
 	@echo "Building..."
-	go mod tidy
-	go mod download
-	@go build -o bin/$(shell basename $(PWD)) main.go
+	@go mod tidy
+	@go mod download
+	@$(MAKE) proto_gen
+	@go build -o bin/$(shell basename $(PWD)) ./cmd
+
+proto_gen:
+	@echo "Generating proto..."
+	@cd proto && \
+	buf dep update && \
+	buf generate
 
 run:
 	@echo "Running..."
-	./bin/$(shell basename $(PWD))
+	@./bin/$(shell basename $(PWD))
