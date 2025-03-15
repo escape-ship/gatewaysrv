@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
@@ -28,8 +29,22 @@ func run() error {
 	// Register gRPC server endpoint
 	// Note: Make sure the gRPC server is running properly and accessible
 	mux := runtime.NewServeMux()
+	// Create CORS handler to allow cross-origin requests
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // Or you can restrict to specific origins (e.g., ["http://localhost:3000"])
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"*"},
+		ExposedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}).Handler(mux)
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err := gw.RegisterOrderHandlerFromEndpoint(ctx, mux, *grpcServerEndpoint, opts)
+	orderEndpoint := "localhost:9091"
+	err := gw.RegisterOrderHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
+	if err != nil {
+		return err
+	}
+	accountEndpoint := "localhost:9090"
+	err = gw.RegisterAccountHandlerFromEndpoint(ctx, mux, accountEndpoint, opts)
 	if err != nil {
 		return err
 	}
@@ -37,7 +52,7 @@ func run() error {
 	fmt.Println("Serving gRPC-Gateway on http://0.0.0.0:8081")
 
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	return http.ListenAndServe(":8081", mux)
+	return http.ListenAndServe(":8081", corsHandler)
 }
 
 func main() {
