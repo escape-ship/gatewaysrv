@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
 
+	"github.com/escape-ship/gatewaysrv/internal/app/jwtToken"
 	gw "github.com/escape-ship/gatewaysrv/proto/gen" // Update
 )
 
@@ -37,7 +38,9 @@ func run() error {
 		ExposedHeaders:   []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}).Handler(mux)
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	opts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
 	orderEndpoint := "localhost:9091"
 	err := gw.RegisterOrderHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
 	if err != nil {
@@ -49,10 +52,26 @@ func run() error {
 		return err
 	}
 
+	authMiddleware := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path == "/oauth/register" { // 로그인 경로는 제외
+				next.ServeHTTP(w, r)
+				return
+			}
+			token := r.Header.Get("Authorization")
+			err := jwtToken.VsalidateJWT(token)
+			if token == "" || err != nil {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+			next.ServeHTTP(w, r)
+		})
+	}
+
 	fmt.Println("Serving gRPC-Gateway on http://0.0.0.0:8081")
 
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	return http.ListenAndServe(":8081", corsHandler)
+	return http.ListenAndServe(":8081", authMiddleware(corsHandler))
 }
 
 func main() {

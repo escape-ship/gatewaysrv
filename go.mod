@@ -3,6 +3,7 @@ module github.com/escape-ship/gatewaysrv
 go 1.24.0
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1
 	github.com/rs/cors v1.11.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20250204164813-702378808489
