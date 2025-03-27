@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/cors"
@@ -54,7 +55,7 @@ func run() error {
 
 	authMiddleware := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.URL.Path == "/oauth/register" { // 로그인 경로는 제외
+			if strings.HasPrefix(r.URL.Path, "/oauth") {
 				next.ServeHTTP(w, r)
 				return
 			}
