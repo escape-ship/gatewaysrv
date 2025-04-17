@@ -1,0 +1,61 @@
+syntax = "proto3";
+package go.escape.ship.proto.productapi;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/escape-ship/productsrv/proto/gen";
+
+message Product {
+    uint64 id = 1;
+    string name = 2;
+    string categories = 3;
+    double price = 4;
+    int32 inventory = 5;
+    string image_url = 6;
+    string created_at = 7;
+    string updated_at = 8;
+
+}
+
+message ProductsRequest {
+    uint64 id = 1;
+}
+message ProductsResponse {
+    repeated Product products = 1; // ← 리스트로 응답!
+}
+message PostProductRequest {
+    string name = 1;
+    string categories = 2;
+    double price = 3;
+    int32 inventory = 4;
+    string image_url = 5;
+}
+message PostProductResponse {
+    string message = 1; // ex) "post successful" 
+}
+message ProductInventoryRequest {
+    uint64 id = 1;
+}
+message ProductInventoryResponse {
+    uint64 id = 1;
+    int32 inventory = 2;
+}
+service ProductService {
+    rpc GetProducts(ProductsRequest) returns (ProductsResponse) {
+        option (google.api.http) = {
+            get: "/products/{id}"
+        };
+    }
+    rpc PostProducts(PostProductRequest) returns (PostProductResponse) {
+        option (google.api.http) = {
+            post: "/products"
+            body: "*"
+        };
+    }
+    rpc GetProductInventory(ProductInventoryRequest) returns (ProductInventoryResponse) {
+        option (google.api.http) = {
+            get: "/products/{id}/inventory"
+        };
+    }
+}

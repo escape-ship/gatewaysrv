@@ -33,7 +33,7 @@ func run() error {
 	mux := runtime.NewServeMux()
 	// Create CORS handler to allow cross-origin requests
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // Or you can restrict to specific origins (e.g., ["http://localhost:3000"])
+		AllowedOrigins:   []string{"http://127.0.0.1:5500"}, // Or you can restrict to specific origins (e.g., ["http://localhost:3000"])
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		ExposedHeaders:   []string{"Content-Type", "Authorization"},
@@ -43,7 +43,7 @@ func run() error {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 	orderEndpoint := "localhost:9091"
-	err := gw.RegisterOrderHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
+	err := gw.RegisterProductServiceHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
 	if err != nil {
 		return err
 	}
@@ -55,6 +55,16 @@ func run() error {
 
 	authMiddleware := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// OPTIONS 요청은 CORS preflight이므로 무조건 통과
+			if r.Method == http.MethodOptions {
+				w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
+				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+				w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+				w.Header().Set("Access-Control-Allow-Credentials", "true")
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+
 			if strings.HasPrefix(r.URL.Path, "/oauth") {
 				next.ServeHTTP(w, r)
 				return

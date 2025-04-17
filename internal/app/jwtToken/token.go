@@ -9,7 +9,7 @@ import (
 )
 
 // 비밀키 (실제론 환경 변수나 설정 파일에서 가져오는 게 안전)
-var jwtSecret = []byte("secret-key") // 환경 변수로 바꾸는 걸 추천
+var jwtSecret = []byte("jwt secret key") // 환경 변수로 바꾸는 걸 추천
 
 func VsalidateJWT(tokenString string) error {
 	// "Bearer " 접두사 제거 (gRPC 메타데이터에서 이미 제거된 상태라면 생략 가능)
