@@ -52,6 +52,11 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	paymentEndpoint := "localhost:9092"
+	err = gw.RegisterPaymentServiceHandlerFromEndpoint(ctx, mux, paymentEndpoint, opts)
+	if err != nil {
+		return err
+	}
 
 	authMiddleware := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,7 @@ all: build
 
 init:
 	@echo "Initializing..."
-	@$(MAKE) buf_download
+	@$(MAKE) tool_download
 
 build:
 	@echo "Building..."
@@ -20,13 +20,17 @@ proto_gen:
 	buf dep update && \
 	buf generate
 
-buf_download:
-	@echo "Downloading buf..."
-	@go install github.com/bufbuild/buf/cmd/buf@latest
+tool_update:
+	@echo "Updating tools..."
+	@go get -modfile=tools.mod -tool github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+	@go get -modfile=tools.mod -tool github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+	@go get -modfile=tools.mod -tool google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	@go get -modfile=tools.mod -tool google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
-sqlc_gen:
-	@echo "Generating sqlc..."
-	@sqlc generate
+tool_download:
+	@echo "Downloading tools..."
+	@go install -modfile=tools.mod tool
+	@go install github.com/bufbuild/buf/cmd/buf@latest
 
 run:
 	@echo "Running..."
