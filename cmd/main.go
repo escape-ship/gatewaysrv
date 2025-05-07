@@ -8,12 +8,10 @@ import (
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
 
-	"github.com/escape-ship/gatewaysrv/internal/app/jwtToken"
 	gw "github.com/escape-ship/gatewaysrv/proto/gen" // Update
 )
 
@@ -31,24 +29,16 @@ func run() error {
 	// Register gRPC server endpoint
 	// Note: Make sure the gRPC server is running properly and accessible
 	mux := runtime.NewServeMux()
-	// Create CORS handler to allow cross-origin requests
-	corsHandler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://127.0.0.1:5500"}, // Or you can restrict to specific origins (e.g., ["http://localhost:3000"])
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"*"},
-		ExposedHeaders:   []string{"Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}).Handler(mux)
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
-	orderEndpoint := "localhost:9091"
-	err := gw.RegisterProductServiceHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
+	accountEndpoint := "localhost:9090"
+	err := gw.RegisterAccountHandlerFromEndpoint(ctx, mux, accountEndpoint, opts)
 	if err != nil {
 		return err
 	}
-	accountEndpoint := "localhost:9090"
-	err = gw.RegisterAccountHandlerFromEndpoint(ctx, mux, accountEndpoint, opts)
+	orderEndpoint := "localhost:9091"
+	err = gw.RegisterProductServiceHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
 	if err != nil {
 		return err
 	}
@@ -58,36 +48,41 @@ func run() error {
 		return err
 	}
 
-	authMiddleware := func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// OPTIONS 요청은 CORS preflight이므로 무조건 통과
-			if r.Method == http.MethodOptions {
-				w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
-				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-				w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-				w.Header().Set("Access-Control-Allow-Credentials", "true")
-				w.WriteHeader(http.StatusOK)
-				return
-			}
-
-			if strings.HasPrefix(r.URL.Path, "/oauth") {
-				next.ServeHTTP(w, r)
-				return
-			}
-			token := r.Header.Get("Authorization")
-			err := jwtToken.VsalidateJWT(token)
-			if token == "" || err != nil {
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
-				return
-			}
-			next.ServeHTTP(w, r)
-		})
-	}
-
 	fmt.Println("Serving gRPC-Gateway on http://0.0.0.0:8081")
-
+	s := &http.Server{
+		Addr:    ":8081",
+		Handler: allowCORS(mux),
+	}
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	return http.ListenAndServe(":8081", authMiddleware(corsHandler))
+	// return http.ListenAndServe(":8081", authMiddleware(corsHandler))
+	return s.ListenAndServe()
+}
+
+// allowCORS allows Cross Origin Resource Sharing from any origin.
+// Don't do this without consideration in production systems.
+func allowCORS(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if origin := r.Header.Get("Origin"); origin != "" {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Access-Control-Allow-credentials", "true")
+			if r.Method == "OPTIONS" && r.Header.Get("Access-Control-Request-Method") != "" {
+				preflightHandler(w, r)
+				return
+			}
+		}
+		h.ServeHTTP(w, r)
+	})
+}
+
+// preflightHandler adds the necessary headers in order to serve
+// CORS from any origin using the methods "GET", "HEAD", "POST", "PUT", "DELETE"
+// We insist, don't do this without consideration in production systems.
+func preflightHandler(w http.ResponseWriter, r *http.Request) {
+	headers := []string{"Content-Type", "Accept", "Authorization"}
+	w.Header().Set("Access-Control-Allow-Headers", strings.Join(headers, ","))
+	methods := []string{"GET", "HEAD", "POST", "PUT", "DELETE"}
+	w.Header().Set("Access-Control-Allow-Methods", strings.Join(methods, ","))
+	grpclog.Infof("Preflight request for %s", r.URL.Path)
 }
 
 func main() {
