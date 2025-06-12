@@ -17,6 +17,26 @@
   ],
   "paths": {
     "/products": {
+      "get": {
+        "operationId": "ProductService_GetProducts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/productapiGetProductsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductService"
+        ]
+      },
       "post": {
         "operationId": "ProductService_PostProducts",
         "responses": {
@@ -48,14 +68,14 @@
         ]
       }
     },
-    "/products/{id}": {
+    "/products/name/{name}": {
       "get": {
-        "operationId": "ProductService_GetProducts",
+        "operationId": "ProductService_GetProductByName",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/productapiProductsResponse"
+              "$ref": "#/definitions/productapiGetProductByNameResponse"
             }
           },
           "default": {
@@ -67,11 +87,10 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "name",
             "in": "path",
             "required": true,
-            "type": "string",
-            "format": "uint64"
+            "type": "string"
           }
         ],
         "tags": [
@@ -79,14 +98,14 @@
         ]
       }
     },
-    "/products/{id}/inventory": {
+    "/products/{productId}/inventories": {
       "get": {
-        "operationId": "ProductService_GetProductInventory",
+        "operationId": "ProductService_GetInventoriesByProductID",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/productapiProductInventoryResponse"
+              "$ref": "#/definitions/productapiGetInventoriesByProductIDResponse"
             }
           },
           "default": {
@@ -98,11 +117,10 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "productId",
             "in": "path",
             "required": true,
-            "type": "string",
-            "format": "uint64"
+            "type": "string"
           }
         ],
         "tags": [
@@ -112,6 +130,65 @@
     }
   },
   "definitions": {
+    "productapiCategory": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "카테고리 정보"
+    },
+    "productapiGetInventoriesByProductIDResponse": {
+      "type": "object",
+      "properties": {
+        "inventories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/productapiInventory"
+          }
+        }
+      }
+    },
+    "productapiGetProductByNameResponse": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "$ref": "#/definitions/productapiProduct"
+        }
+      }
+    },
+    "productapiGetProductsResponse": {
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/productapiProduct"
+          }
+        }
+      }
+    },
+    "productapiInventory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "productId": {
+          "type": "string"
+        },
+        "productOptionId": {
+          "type": "string"
+        },
+        "stockQuantity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "productapiPostProductRequest": {
       "type": "object",
       "properties": {
@@ -119,27 +196,26 @@
           "type": "string"
         },
         "categories": {
-          "type": "string"
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "price": {
-          "type": "number",
-          "format": "double"
-        },
-        "inventory": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "imageUrl": {
           "type": "string"
         }
-      }
+      },
+      "title": "상품 추가 요청"
     },
     "productapiPostProductResponse": {
       "type": "object",
       "properties": {
         "message": {
-          "type": "string",
-          "title": "ex) \"post successful\""
+          "type": "string"
         }
       }
     },
@@ -147,18 +223,21 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "format": "uint64"
+          "type": "string"
         },
         "name": {
           "type": "string"
         },
         "categories": {
-          "type": "string"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/productapiCategory"
+          }
         },
         "price": {
-          "type": "number",
-          "format": "double"
+          "type": "string",
+          "format": "int64"
         },
         "inventory": {
           "type": "integer",
@@ -173,33 +252,8 @@
         "updatedAt": {
           "type": "string"
         }
-      }
-    },
-    "productapiProductInventoryResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "inventory": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "productapiProductsResponse": {
-      "type": "object",
-      "properties": {
-        "products": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/productapiProduct"
-          },
-          "title": "← 리스트로 응답!"
-        }
-      }
+      },
+      "title": "상품 정보"
     },
     "protobufAny": {
       "type": "object",

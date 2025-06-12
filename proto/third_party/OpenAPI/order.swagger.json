@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "Order"
+      "name": "OrderService"
     }
   ],
   "consumes": [
@@ -18,12 +18,12 @@
   "paths": {
     "/v1/order": {
       "get": {
-        "operationId": "Order_GetAll",
+        "operationId": "OrderService_GetAllOrders",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/orderapiGetAllResponseMessage"
+              "$ref": "#/definitions/orderapiGetAllOrdersResponse"
             }
           },
           "default": {
@@ -34,18 +34,18 @@
           }
         },
         "tags": [
-          "Order"
+          "OrderService"
         ]
       }
     },
     "/v1/order/insert": {
       "post": {
-        "operationId": "Order_Insert",
+        "operationId": "OrderService_InsertOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/orderapiInsertResponseMessage"
+              "$ref": "#/definitions/orderapiInsertOrderResponse"
             }
           },
           "default": {
@@ -61,128 +61,174 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/orderapiInsertRequestMessage"
+              "$ref": "#/definitions/orderapiInsertOrderRequest"
             }
           }
         ],
         "tags": [
-          "Order"
-        ]
-      }
-    },
-    "/v1/order/update": {
-      "put": {
-        "operationId": "Order_UpdateOrder",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/orderapiUpdateResponseMessage"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/orderapiUpdateRequestMessage"
-            }
-          }
-        ],
-        "tags": [
-          "Order"
+          "OrderService"
         ]
       }
     }
   },
   "definitions": {
-    "orderapiGetAllResponseMessage": {
+    "orderapiGetAllOrdersResponse": {
       "type": "object",
       "properties": {
         "orders": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/orderapiOrderMessage"
+            "$ref": "#/definitions/orderapiOrder"
           }
         }
       }
     },
-    "orderapiInsertRequestMessage": {
+    "orderapiInsertOrderItemRequest": {
       "type": "object",
       "properties": {
-        "orderSource": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "loyaltyMemberId": {
+        "productId": {
           "type": "string"
         },
-        "orderStatus": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "orderapiInsertResponseMessage": {
-      "type": "object",
-      "properties": {
-        "id": {
+        "productName": {
+          "type": "string"
+        },
+        "productPrice": {
           "type": "string",
           "format": "int64"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
-    "orderapiOrderMessage": {
+    "orderapiInsertOrderRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "orderNumber": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "totalPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "paymentMethod": {
+          "type": "string"
+        },
+        "shippingFee": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "shippingAddress": {
+          "type": "string"
+        },
+        "paidAt": {
+          "type": "string"
+        },
+        "memo": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/orderapiInsertOrderItemRequest"
+          }
+        }
+      }
+    },
+    "orderapiInsertOrderResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "orderapiOrder": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
         },
-        "orderSource": {
+        "userId": {
+          "type": "string"
+        },
+        "orderNumber": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "totalPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
           "type": "integer",
           "format": "int32"
         },
-        "loyaltyMemberId": {
+        "paymentMethod": {
           "type": "string"
         },
-        "orderStatus": {
+        "shippingFee": {
           "type": "integer",
           "format": "int32"
         },
-        "updated": {
+        "shippingAddress": {
           "type": "string"
+        },
+        "orderedAt": {
+          "type": "string"
+        },
+        "paidAt": {
+          "type": "string"
+        },
+        "memo": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/orderapiOrderItem"
+          }
         }
       }
     },
-    "orderapiUpdateRequestMessage": {
+    "orderapiOrderItem": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
         },
-        "orderStatus": {
+        "orderId": {
+          "type": "string"
+        },
+        "productId": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
           "type": "integer",
           "format": "int32"
-        }
-      }
-    },
-    "orderapiUpdateResponseMessage": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
         }
       }
     },

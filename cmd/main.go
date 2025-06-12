@@ -37,13 +37,18 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	orderEndpoint := "localhost:9091"
-	err = gw.RegisterProductServiceHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
+	productEndpoint := "localhost:9091"
+	err = gw.RegisterProductServiceHandlerFromEndpoint(ctx, mux, productEndpoint, opts)
 	if err != nil {
 		return err
 	}
 	paymentEndpoint := "localhost:9092"
 	err = gw.RegisterPaymentServiceHandlerFromEndpoint(ctx, mux, paymentEndpoint, opts)
+	if err != nil {
+		return err
+	}
+	orderEndpoint := "localhost:9093"
+	err = gw.RegisterOrderServiceHandlerFromEndpoint(ctx, mux, orderEndpoint, opts)
 	if err != nil {
 		return err
 	}

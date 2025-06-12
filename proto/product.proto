@@ -6,45 +6,76 @@ import "google/protobuf/any.proto";
 
 option go_package = "github.com/escape-ship/productsrv/proto/gen";
 
+// 카테고리 정보
+message Category {
+    string name = 1;
+}
+
+// 상품 정보
 message Product {
-    uint64 id = 1;
+    string id = 1;
     string name = 2;
-    string categories = 3;
-    double price = 4;
+    repeated Category categories = 3;
+    int64 price = 4;
     int32 inventory = 5;
     string image_url = 6;
     string created_at = 7;
     string updated_at = 8;
-
 }
 
-message ProductsRequest {
-    uint64 id = 1;
+// 전체 상품 목록 요청 (필터 없음)
+message GetProductsRequest {}
+
+message GetProductsResponse {
+    repeated Product products = 1;
 }
-message ProductsResponse {
-    repeated Product products = 1; // ← 리스트로 응답!
+
+// 이름으로 상품 조회 요청
+message GetProductByNameRequest {
+    string name = 1;
 }
+
+message GetProductByNameResponse {
+    Product product = 1;
+}
+
+// 상품 추가 요청
 message PostProductRequest {
     string name = 1;
-    string categories = 2;
-    double price = 3;
-    int32 inventory = 4;
-    string image_url = 5;
+    repeated string categories = 2;
+    int64 price = 3;
+    string image_url = 4;
 }
+
 message PostProductResponse {
-    string message = 1; // ex) "post successful" 
+    string message = 1;
 }
-message ProductInventoryRequest {
-    uint64 id = 1;
+
+// 인벤토리 조회 요청
+message GetInventoriesByProductIDRequest {
+    string product_id = 1;
 }
-message ProductInventoryResponse {
-    uint64 id = 1;
-    int32 inventory = 2;
+
+message Inventory {
+    string id = 1;
+    string product_id = 2;
+    string product_option_id = 3;
+    int32 stock_quantity = 4;
 }
+
+message GetInventoriesByProductIDResponse {
+    repeated Inventory inventories = 1;
+}
+
 service ProductService {
-    rpc GetProducts(ProductsRequest) returns (ProductsResponse) {
+    rpc GetProducts(GetProductsRequest) returns (GetProductsResponse) {
         option (google.api.http) = {
-            get: "/products/{id}"
+            get: "/products"
+        };
+    }
+    rpc GetProductByName(GetProductByNameRequest) returns (GetProductByNameResponse) {
+        option (google.api.http) = {
+            get: "/products/name/{name}"
         };
     }
     rpc PostProducts(PostProductRequest) returns (PostProductResponse) {
@@ -53,9 +84,9 @@ service ProductService {
             body: "*"
         };
     }
-    rpc GetProductInventory(ProductInventoryRequest) returns (ProductInventoryResponse) {
+    rpc GetInventoriesByProductID(GetInventoriesByProductIDRequest) returns (GetInventoriesByProductIDResponse) {
         option (google.api.http) = {
-            get: "/products/{id}/inventory"
+            get: "/products/{product_id}/inventories"
         };
     }
 }
