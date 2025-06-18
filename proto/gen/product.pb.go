@@ -251,27 +251,27 @@ func (x *GetProductsResponse) GetProducts() []*Product {
 }
 
 // 이름으로 상품 조회 요청
-type GetProductByNameRequest struct {
+type GetProductByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetProductByNameRequest) Reset() {
-	*x = GetProductByNameRequest{}
+func (x *GetProductByIDRequest) Reset() {
+	*x = GetProductByIDRequest{}
 	mi := &file_product_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetProductByNameRequest) String() string {
+func (x *GetProductByIDRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetProductByNameRequest) ProtoMessage() {}
+func (*GetProductByIDRequest) ProtoMessage() {}
 
-func (x *GetProductByNameRequest) ProtoReflect() protoreflect.Message {
+func (x *GetProductByIDRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_product_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -283,39 +283,39 @@ func (x *GetProductByNameRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetProductByNameRequest.ProtoReflect.Descriptor instead.
-func (*GetProductByNameRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetProductByIDRequest.ProtoReflect.Descriptor instead.
+func (*GetProductByIDRequest) Descriptor() ([]byte, []int) {
 	return file_product_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetProductByNameRequest) GetName() string {
+func (x *GetProductByIDRequest) GetId() string {
 	if x != nil {
-		return x.Name
+		return x.Id
 	}
 	return ""
 }
 
-type GetProductByNameResponse struct {
+type GetProductByIDResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Product       *Product               `protobuf:"bytes,1,opt,name=product,proto3" json:"product,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetProductByNameResponse) Reset() {
-	*x = GetProductByNameResponse{}
+func (x *GetProductByIDResponse) Reset() {
+	*x = GetProductByIDResponse{}
 	mi := &file_product_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetProductByNameResponse) String() string {
+func (x *GetProductByIDResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetProductByNameResponse) ProtoMessage() {}
+func (*GetProductByIDResponse) ProtoMessage() {}
 
-func (x *GetProductByNameResponse) ProtoReflect() protoreflect.Message {
+func (x *GetProductByIDResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_product_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -327,12 +327,12 @@ func (x *GetProductByNameResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetProductByNameResponse.ProtoReflect.Descriptor instead.
-func (*GetProductByNameResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetProductByIDResponse.ProtoReflect.Descriptor instead.
+func (*GetProductByIDResponse) Descriptor() ([]byte, []int) {
 	return file_product_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetProductByNameResponse) GetProduct() *Product {
+func (x *GetProductByIDResponse) GetProduct() *Product {
 	if x != nil {
 		return x.Product
 	}
@@ -631,10 +631,10 @@ const file_product_proto_rawDesc = "" +
 	"updated_at\x18\b \x01(\tR\tupdatedAt\"\x14\n" +
 	"\x12GetProductsRequest\"[\n" +
 	"\x13GetProductsResponse\x12D\n" +
-	"\bproducts\x18\x01 \x03(\v2(.go.escape.ship.proto.productapi.ProductR\bproducts\"-\n" +
-	"\x17GetProductByNameRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"^\n" +
-	"\x18GetProductByNameResponse\x12B\n" +
+	"\bproducts\x18\x01 \x03(\v2(.go.escape.ship.proto.productapi.ProductR\bproducts\"'\n" +
+	"\x15GetProductByIDRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\\\n" +
+	"\x16GetProductByIDResponse\x12B\n" +
 	"\aproduct\x18\x01 \x01(\v2(.go.escape.ship.proto.productapi.ProductR\aproduct\"{\n" +
 	"\x12PostProductRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1e\n" +
@@ -655,10 +655,10 @@ const file_product_proto_rawDesc = "" +
 	"\x11product_option_id\x18\x03 \x01(\tR\x0fproductOptionId\x12%\n" +
 	"\x0estock_quantity\x18\x04 \x01(\x05R\rstockQuantity\"q\n" +
 	"!GetInventoriesByProductIDResponse\x12L\n" +
-	"\vinventories\x18\x01 \x03(\v2*.go.escape.ship.proto.productapi.InventoryR\vinventories2\xaa\x05\n" +
+	"\vinventories\x18\x01 \x03(\v2*.go.escape.ship.proto.productapi.InventoryR\vinventories2\x9d\x05\n" +
 	"\x0eProductService\x12\x8b\x01\n" +
-	"\vGetProducts\x123.go.escape.ship.proto.productapi.GetProductsRequest\x1a4.go.escape.ship.proto.productapi.GetProductsResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/products\x12\xa6\x01\n" +
-	"\x10GetProductByName\x128.go.escape.ship.proto.productapi.GetProductByNameRequest\x1a9.go.escape.ship.proto.productapi.GetProductByNameResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/products/name/{name}\x12\x8f\x01\n" +
+	"\vGetProducts\x123.go.escape.ship.proto.productapi.GetProductsRequest\x1a4.go.escape.ship.proto.productapi.GetProductsResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/products\x12\x99\x01\n" +
+	"\x0eGetProductByID\x126.go.escape.ship.proto.productapi.GetProductByIDRequest\x1a7.go.escape.ship.proto.productapi.GetProductByIDResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/products/{id}\x12\x8f\x01\n" +
 	"\fPostProducts\x123.go.escape.ship.proto.productapi.PostProductRequest\x1a4.go.escape.ship.proto.productapi.PostProductResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/products\x12\xce\x01\n" +
 	"\x19GetInventoriesByProductID\x12A.go.escape.ship.proto.productapi.GetInventoriesByProductIDRequest\x1aB.go.escape.ship.proto.productapi.GetInventoriesByProductIDResponse\"*\x82\xd3\xe4\x93\x02$\x12\"/products/{product_id}/inventoriesB-Z+github.com/escape-ship/productsrv/proto/genb\x06proto3"
 
@@ -680,8 +680,8 @@ var file_product_proto_goTypes = []any{
 	(*Product)(nil),                           // 1: go.escape.ship.proto.productapi.Product
 	(*GetProductsRequest)(nil),                // 2: go.escape.ship.proto.productapi.GetProductsRequest
 	(*GetProductsResponse)(nil),               // 3: go.escape.ship.proto.productapi.GetProductsResponse
-	(*GetProductByNameRequest)(nil),           // 4: go.escape.ship.proto.productapi.GetProductByNameRequest
-	(*GetProductByNameResponse)(nil),          // 5: go.escape.ship.proto.productapi.GetProductByNameResponse
+	(*GetProductByIDRequest)(nil),             // 4: go.escape.ship.proto.productapi.GetProductByIDRequest
+	(*GetProductByIDResponse)(nil),            // 5: go.escape.ship.proto.productapi.GetProductByIDResponse
 	(*PostProductRequest)(nil),                // 6: go.escape.ship.proto.productapi.PostProductRequest
 	(*PostProductResponse)(nil),               // 7: go.escape.ship.proto.productapi.PostProductResponse
 	(*GetInventoriesByProductIDRequest)(nil),  // 8: go.escape.ship.proto.productapi.GetInventoriesByProductIDRequest
@@ -691,14 +691,14 @@ var file_product_proto_goTypes = []any{
 var file_product_proto_depIdxs = []int32{
 	0,  // 0: go.escape.ship.proto.productapi.Product.categories:type_name -> go.escape.ship.proto.productapi.Category
 	1,  // 1: go.escape.ship.proto.productapi.GetProductsResponse.products:type_name -> go.escape.ship.proto.productapi.Product
-	1,  // 2: go.escape.ship.proto.productapi.GetProductByNameResponse.product:type_name -> go.escape.ship.proto.productapi.Product
+	1,  // 2: go.escape.ship.proto.productapi.GetProductByIDResponse.product:type_name -> go.escape.ship.proto.productapi.Product
 	9,  // 3: go.escape.ship.proto.productapi.GetInventoriesByProductIDResponse.inventories:type_name -> go.escape.ship.proto.productapi.Inventory
 	2,  // 4: go.escape.ship.proto.productapi.ProductService.GetProducts:input_type -> go.escape.ship.proto.productapi.GetProductsRequest
-	4,  // 5: go.escape.ship.proto.productapi.ProductService.GetProductByName:input_type -> go.escape.ship.proto.productapi.GetProductByNameRequest
+	4,  // 5: go.escape.ship.proto.productapi.ProductService.GetProductByID:input_type -> go.escape.ship.proto.productapi.GetProductByIDRequest
 	6,  // 6: go.escape.ship.proto.productapi.ProductService.PostProducts:input_type -> go.escape.ship.proto.productapi.PostProductRequest
 	8,  // 7: go.escape.ship.proto.productapi.ProductService.GetInventoriesByProductID:input_type -> go.escape.ship.proto.productapi.GetInventoriesByProductIDRequest
 	3,  // 8: go.escape.ship.proto.productapi.ProductService.GetProducts:output_type -> go.escape.ship.proto.productapi.GetProductsResponse
-	5,  // 9: go.escape.ship.proto.productapi.ProductService.GetProductByName:output_type -> go.escape.ship.proto.productapi.GetProductByNameResponse
+	5,  // 9: go.escape.ship.proto.productapi.ProductService.GetProductByID:output_type -> go.escape.ship.proto.productapi.GetProductByIDResponse
 	7,  // 10: go.escape.ship.proto.productapi.ProductService.PostProducts:output_type -> go.escape.ship.proto.productapi.PostProductResponse
 	10, // 11: go.escape.ship.proto.productapi.ProductService.GetInventoriesByProductID:output_type -> go.escape.ship.proto.productapi.GetInventoriesByProductIDResponse
 	8,  // [8:12] is the sub-list for method output_type

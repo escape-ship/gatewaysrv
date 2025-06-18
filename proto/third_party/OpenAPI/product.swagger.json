@@ -68,14 +68,14 @@
         ]
       }
     },
-    "/products/name/{name}": {
+    "/products/{id}": {
       "get": {
-        "operationId": "ProductService_GetProductByName",
+        "operationId": "ProductService_GetProductByID",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/productapiGetProductByNameResponse"
+              "$ref": "#/definitions/productapiGetProductByIDResponse"
             }
           },
           "default": {
@@ -87,7 +87,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
@@ -151,7 +151,7 @@
         }
       }
     },
-    "productapiGetProductByNameResponse": {
+    "productapiGetProductByIDResponse": {
       "type": "object",
       "properties": {
         "product": {

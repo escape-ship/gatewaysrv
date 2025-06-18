@@ -31,11 +31,11 @@ message GetProductsResponse {
 }
 
 // 이름으로 상품 조회 요청
-message GetProductByNameRequest {
-    string name = 1;
+message GetProductByIDRequest {
+    string id = 1;
 }
 
-message GetProductByNameResponse {
+message GetProductByIDResponse {
     Product product = 1;
 }
 
@@ -73,9 +73,9 @@ service ProductService {
             get: "/products"
         };
     }
-    rpc GetProductByName(GetProductByNameRequest) returns (GetProductByNameResponse) {
+    rpc GetProductByID(GetProductByIDRequest) returns (GetProductByIDResponse) {
         option (google.api.http) = {
-            get: "/products/name/{name}"
+            get: "/products/{id}"
         };
     }
     rpc PostProducts(PostProductRequest) returns (PostProductResponse) {
