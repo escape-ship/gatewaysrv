@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProductService_GetProducts_FullMethodName               = "/go.escape.ship.proto.productapi.ProductService/GetProducts"
-	ProductService_GetProductByID_FullMethodName            = "/go.escape.ship.proto.productapi.ProductService/GetProductByID"
-	ProductService_PostProducts_FullMethodName              = "/go.escape.ship.proto.productapi.ProductService/PostProducts"
-	ProductService_GetInventoriesByProductID_FullMethodName = "/go.escape.ship.proto.productapi.ProductService/GetInventoriesByProductID"
+	ProductService_GetProducts_FullMethodName       = "/go.escape.ship.proto.productapi.ProductService/GetProducts"
+	ProductService_GetProductByID_FullMethodName    = "/go.escape.ship.proto.productapi.ProductService/GetProductByID"
+	ProductService_PostProducts_FullMethodName      = "/go.escape.ship.proto.productapi.ProductService/PostProducts"
+	ProductService_GetProductOptions_FullMethodName = "/go.escape.ship.proto.productapi.ProductService/GetProductOptions"
 )
 
 // ProductServiceClient is the client API for ProductService service.
@@ -32,7 +32,7 @@ type ProductServiceClient interface {
 	GetProducts(ctx context.Context, in *GetProductsRequest, opts ...grpc.CallOption) (*GetProductsResponse, error)
 	GetProductByID(ctx context.Context, in *GetProductByIDRequest, opts ...grpc.CallOption) (*GetProductByIDResponse, error)
 	PostProducts(ctx context.Context, in *PostProductRequest, opts ...grpc.CallOption) (*PostProductResponse, error)
-	GetInventoriesByProductID(ctx context.Context, in *GetInventoriesByProductIDRequest, opts ...grpc.CallOption) (*GetInventoriesByProductIDResponse, error)
+	GetProductOptions(ctx context.Context, in *GetProductOptionsRequest, opts ...grpc.CallOption) (*GetProductOptionsResponse, error)
 }
 
 type productServiceClient struct {
@@ -73,10 +73,10 @@ func (c *productServiceClient) PostProducts(ctx context.Context, in *PostProduct
 	return out, nil
 }
 
-func (c *productServiceClient) GetInventoriesByProductID(ctx context.Context, in *GetInventoriesByProductIDRequest, opts ...grpc.CallOption) (*GetInventoriesByProductIDResponse, error) {
+func (c *productServiceClient) GetProductOptions(ctx context.Context, in *GetProductOptionsRequest, opts ...grpc.CallOption) (*GetProductOptionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetInventoriesByProductIDResponse)
-	err := c.cc.Invoke(ctx, ProductService_GetInventoriesByProductID_FullMethodName, in, out, cOpts...)
+	out := new(GetProductOptionsResponse)
+	err := c.cc.Invoke(ctx, ProductService_GetProductOptions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ type ProductServiceServer interface {
 	GetProducts(context.Context, *GetProductsRequest) (*GetProductsResponse, error)
 	GetProductByID(context.Context, *GetProductByIDRequest) (*GetProductByIDResponse, error)
 	PostProducts(context.Context, *PostProductRequest) (*PostProductResponse, error)
-	GetInventoriesByProductID(context.Context, *GetInventoriesByProductIDRequest) (*GetInventoriesByProductIDResponse, error)
+	GetProductOptions(context.Context, *GetProductOptionsRequest) (*GetProductOptionsResponse, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -110,8 +110,8 @@ func (UnimplementedProductServiceServer) GetProductByID(context.Context, *GetPro
 func (UnimplementedProductServiceServer) PostProducts(context.Context, *PostProductRequest) (*PostProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostProducts not implemented")
 }
-func (UnimplementedProductServiceServer) GetInventoriesByProductID(context.Context, *GetInventoriesByProductIDRequest) (*GetInventoriesByProductIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetInventoriesByProductID not implemented")
+func (UnimplementedProductServiceServer) GetProductOptions(context.Context, *GetProductOptionsRequest) (*GetProductOptionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProductOptions not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 func (UnimplementedProductServiceServer) testEmbeddedByValue()                        {}
@@ -188,20 +188,20 @@ func _ProductService_PostProducts_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductService_GetInventoriesByProductID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetInventoriesByProductIDRequest)
+func _ProductService_GetProductOptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProductOptionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductServiceServer).GetInventoriesByProductID(ctx, in)
+		return srv.(ProductServiceServer).GetProductOptions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductService_GetInventoriesByProductID_FullMethodName,
+		FullMethod: ProductService_GetProductOptions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).GetInventoriesByProductID(ctx, req.(*GetInventoriesByProductIDRequest))
+		return srv.(ProductServiceServer).GetProductOptions(ctx, req.(*GetProductOptionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -226,8 +226,8 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProductService_PostProducts_Handler,
 		},
 		{
-			MethodName: "GetInventoriesByProductID",
-			Handler:    _ProductService_GetInventoriesByProductID_Handler,
+			MethodName: "GetProductOptions",
+			Handler:    _ProductService_GetProductOptions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

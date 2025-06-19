@@ -8,7 +8,8 @@ option go_package = "github.com/escape-ship/productsrv/proto/gen";
 
 // 카테고리 정보
 message Category {
-    string name = 1;
+    int64 id = 1;
+    string name = 2;
 }
 
 // 상품 정보
@@ -17,10 +18,9 @@ message Product {
     string name = 2;
     repeated Category categories = 3;
     int64 price = 4;
-    int32 inventory = 5;
-    string image_url = 6;
-    string created_at = 7;
-    string updated_at = 8;
+    string image_url = 5;
+    string created_at = 6;
+    string updated_at = 7;
 }
 
 // 전체 상품 목록 요청 (필터 없음)
@@ -51,20 +51,24 @@ message PostProductResponse {
     string message = 1;
 }
 
-// 인벤토리 조회 요청
-message GetInventoriesByProductIDRequest {
-    string product_id = 1;
+message GetProductOptionsRequest {
+  string id = 1;
 }
 
-message Inventory {
-    string id = 1;
-    string product_id = 2;
-    string product_option_id = 3;
-    int32 stock_quantity = 4;
+message OptionValue {
+  int32 valueId = 1;
+  string value = 2;
 }
 
-message GetInventoriesByProductIDResponse {
-    repeated Inventory inventories = 1;
+message ProductOption {
+  int32 optionId = 1;
+  string optionName = 2;
+  repeated OptionValue values = 3;
+}
+
+message GetProductOptionsResponse {
+  string productId = 1;
+  repeated ProductOption options = 2;
 }
 
 service ProductService {
@@ -84,9 +88,10 @@ service ProductService {
             body: "*"
         };
     }
-    rpc GetInventoriesByProductID(GetInventoriesByProductIDRequest) returns (GetInventoriesByProductIDResponse) {
+    rpc GetProductOptions(GetProductOptionsRequest) returns (GetProductOptionsResponse) {
         option (google.api.http) = {
-            get: "/products/{product_id}/inventories"
+            post: "/product/{id}/options"
+            body: "*"
         };
     }
 }
