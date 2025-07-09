@@ -1,0 +1,40 @@
+app:
+  name: "gatewaysrv"
+  version: "1.0.0"
+  host: "localhost"
+  port: 8081
+  log_level: "info"
+
+services:
+  account:
+    host: "localhost"
+    port: 9090
+  product:
+    host: "localhost"
+    port: 9091
+  payment:
+    host: "localhost"
+    port: 9092
+  order:
+    host: "localhost"
+    port: 9093
+
+auth:
+  jwt_secret: "${GATEWAY_AUTH_JWT_SECRET}"
+
+cors:
+  allowed_origins:
+    - "*"
+  allowed_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "OPTIONS"
+  allowed_headers:
+    - "Accept"
+    - "Authorization"
+    - "Content-Type"
+    - "X-CSRF-Token"
+  allowed_credentials: true
+  max_age: 3600
