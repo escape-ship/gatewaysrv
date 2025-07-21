@@ -1,7 +1,7 @@
 app:
   name: "gatewaysrv"
   version: "1.0.0"
-  host: "localhost"
+  host: "0.0.0.0"
   port: 8080
   log_level: "info"
 
