@@ -2,22 +2,22 @@ app:
   name: "gatewaysrv"
   version: "1.0.0"
   host: "localhost"
-  port: 8081
+  port: 8080
   log_level: "info"
 
 services:
   account:
-    host: "localhost"
-    port: 9090
+    host: "accountsrv"
+    port: 8081
   product:
-    host: "localhost"
-    port: 9091
-  payment:
-    host: "localhost"
-    port: 9092
+    host: "productsrv"
+    port: 8082
   order:
-    host: "localhost"
-    port: 9093
+    host: "ordersrv"
+    port: 8083
+  payment:
+    host: "paymentsrv"
+    port: 8084
 
 auth:
   jwt_secret: "${GATEWAY_AUTH_JWT_SECRET}"

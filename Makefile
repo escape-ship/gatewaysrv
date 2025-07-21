@@ -14,6 +14,10 @@ build:
 build_alone:
 	@go build -o bin/$(shell basename $(PWD)) ./cmd
 
+pushall:
+	@docker build -t ghcr.io/escape-ship/gatewaysrv:latest .
+	@docker push ghcr.io/escape-ship/gatewaysrv:latest
+
 proto_gen:
 	@echo "Generating proto..."
 	@cd proto && \
@@ -73,4 +77,4 @@ validate_config: ## Validate configuration
 help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: all init build build_alone proto_gen tool_update tool_download run run_dev test test_coverage lint fmt clean validate_config help
+.PHONY: all init build build_alone pushall proto_gen tool_update tool_download run run_dev test test_coverage lint fmt clean validate_config help
