@@ -99,7 +99,7 @@ func (a *App) registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux
 
 	// Register account service
 	accountAddr := a.config.GetServiceAddress("account")
-	if err := gen.RegisterAccountHandlerFromEndpoint(ctx, mux, accountAddr, opts); err != nil {
+	if err := gen.RegisterAccountServiceHandlerFromEndpoint(ctx, mux, accountAddr, opts); err != nil {
 		return fmt.Errorf("failed to register account service: %w", err)
 	}
 
