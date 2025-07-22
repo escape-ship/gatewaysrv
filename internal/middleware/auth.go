@@ -30,14 +30,13 @@ func NewAuth(jwtSecret string) *Auth {
 
 func (a *Auth) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Skip authentication for OPTIONS requests
-		if r.Method == http.MethodOptions {
-			next.ServeHTTP(w, r)
-			return
+		// 인증이 필요 없는 경로 예외 처리
+		nonAuthPaths := map[string]bool{
+			"/products": true,
+			"/health":   true,
+			"/ready":    true,
 		}
-
-		// Skip authentication for health check endpoints
-		if r.URL.Path == "/health" || r.URL.Path == "/ready" {
+		if r.Method == http.MethodOptions || nonAuthPaths[r.URL.Path] || strings.HasPrefix(r.URL.Path, "/oauth/") {
 			next.ServeHTTP(w, r)
 			return
 		}
