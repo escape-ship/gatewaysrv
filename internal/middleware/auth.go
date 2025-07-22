@@ -35,6 +35,8 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 			"/products": true,
 			"/health":   true,
 			"/ready":    true,
+			"/register": true,
+			"/login":    true,
 		}
 		if r.Method == http.MethodOptions || nonAuthPaths[r.URL.Path] || strings.HasPrefix(r.URL.Path, "/oauth/") {
 			next.ServeHTTP(w, r)
