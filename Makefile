@@ -1,14 +1,9 @@
 all: build
 
-init:
-	@echo "Initializing..."
-	@$(MAKE) tool_download
-
 build:
 	@echo "Building..."
 	@go mod tidy
 	@go mod download
-	@$(MAKE) proto_gen
 	@go build -o bin/$(shell basename $(PWD)) ./cmd
 
 build_alone:
@@ -17,24 +12,6 @@ build_alone:
 pushall:
 	@docker build -t ghcr.io/escape-ship/gatewaysrv:latest .
 	@docker push ghcr.io/escape-ship/gatewaysrv:latest
-
-proto_gen:
-	@echo "Generating proto..."
-	@cd proto && \
-	buf dep update && \
-	buf generate
-
-tool_update:
-	@echo "Updating tools..."
-	@go get -modfile=tools.mod -tool github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
-	@go get -modfile=tools.mod -tool github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
-	@go get -modfile=tools.mod -tool google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-	@go get -modfile=tools.mod -tool google.golang.org/protobuf/cmd/protoc-gen-go@latest
-
-tool_download:
-	@echo "Downloading tools..."
-	@go install -modfile=tools.mod tool
-	@go install github.com/bufbuild/buf/cmd/buf@latest
 
 run:
 	@echo "Running..."
