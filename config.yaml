@@ -20,7 +20,7 @@ services:
     port: 8084
 
 auth:
-  jwt_secret: "${GATEWAY_AUTH_JWT_SECRET}"
+  jwt_secret: ""  # Set via GATEWAY_AUTH_JWT_SECRET environment variable
 
 cors:
   allowed_origins:
