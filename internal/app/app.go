@@ -130,8 +130,8 @@ func (a *App) setupMiddleware(handler http.Handler) http.Handler {
 	middlewares := []middleware.Middleware{
 		middleware.NewLogging(a.logger),
 		middleware.NewCORS(a.config.CORS),
-		middleware.NewAuth(a.config.Auth.JWTSecret),
 		middleware.NewRecovery(a.logger),
+		middleware.NewAuth(a.config.Auth.JWTSecret), // Auth는 마지막에 적용
 	}
 
 	// Apply middleware in reverse order
