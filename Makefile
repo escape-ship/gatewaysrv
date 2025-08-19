@@ -9,6 +9,9 @@ build:
 build_alone:
 	@go build -o bin/$(shell basename $(PWD)) ./cmd
 
+docker:
+	@docker build -t ghcr.io/escape-ship/gatewaysrv:latest .
+
 pushall:
 	@docker build -t ghcr.io/escape-ship/gatewaysrv:latest .
 	@docker push ghcr.io/escape-ship/gatewaysrv:latest
