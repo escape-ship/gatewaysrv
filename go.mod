@@ -3,7 +3,7 @@ module github.com/escape-ship/gatewaysrv
 go 1.24.5
 
 require (
-	github.com/escape-ship/protos v1.0.13
+	github.com/escape-ship/protos v1.0.14
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1
 	github.com/spf13/viper v1.20.1

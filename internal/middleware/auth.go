@@ -79,7 +79,6 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 			http.Error(w, "Invalid authorization header format", http.StatusUnauthorized)
 			return
 		}
-		println("Auth middleware - Token received:", tokenString[:50], "...")
 
 		// Parse and validate token
 		token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -105,8 +104,8 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 
 		// Create UserClaims for context compatibility
 		userClaims := &UserClaims{
-			UserID: claims.Subject,
-			Email:  "", // Email not available in token
+			UserID:           claims.Subject,
+			Email:            "", // Email not available in token
 			RegisteredClaims: *claims,
 		}
 
